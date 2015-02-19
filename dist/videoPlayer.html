@@ -9,6 +9,13 @@
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
     <script>
+    function UrlExists(url)
+        {
+          var http = new XMLHttpRequest();
+          http.open('HEAD', url, false);
+          http.send();
+          return http.status!=404;
+        }
         function getParameterByName(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
             var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -38,6 +45,21 @@
                     "type": 'video/mp4; codecs="a_ac3, avc"',
                     "src": src
                 }));
+                var sub=''
+                url=src.substr(0,src.lastIndexOf("."))+".en.srt";
+                if(UrlExists(url))
+                   sub=url;
+                url=src.substr(0,src.lastIndexOf("."))+".srt";
+                if(UrlExists(url))
+                   sub=url;
+                if(sub != ''){
+                    $player.append($('<track>', {
+                           "label": "English",
+                           "kind": "captions",
+                            "srclang": "en",
+                            "src" : sub
+                    }));
+                }
                 $player.attr('width', width).attr('height', height);
             }
 
